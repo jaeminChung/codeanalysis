@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SessionTest {
@@ -27,6 +28,7 @@ public class SessionTest {
     }
 
     @Test
+    @Ignore
     public void testCreate() {
         JavaType javaType = new JavaType();
         javaType.setQualifiedName("jio.codeanalysis.java.model.JavaType");

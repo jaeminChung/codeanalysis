@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class MethodProcessor extends ASTVisitor{
     final static Logger logger = Logger.getLogger(MethodProcessor.class.getName());
-
+/*
     @Override
     public boolean visit(MethodDeclaration node) {
         IMethodBinding method = node.resolveBinding();
@@ -33,12 +33,15 @@ public class MethodProcessor extends ASTVisitor{
             //output parameter
             logger.info(String.format("  Return Type : %s", method.getReturnType().getQualifiedName()));
 
+
             if( node.getBody() != null ) {
                 StatementProcessor sp = new StatementProcessor();
                 node.getBody().accept(sp);
             }
+
         }
 
         return false;
     }
+*/
 }

@@ -11,6 +11,7 @@ public class JavaMethod {
     @Id
     @Column(name="quilified_name")
     private String quilifiedName;
+
     @Column(name="method_name")
     private String methodName;
 

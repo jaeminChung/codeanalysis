@@ -11,6 +11,7 @@ public class JavaType {
     @Id
     @Column(name="qualified_name")
     private String qualifiedName;
+
     @Column(name="type_name")
     private String typeName;
 
