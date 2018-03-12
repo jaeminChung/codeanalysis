@@ -6,7 +6,11 @@ import java.util.logging.Logger;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());
+    private SourceScanner scanner;
 
+    public TypeProcessor(SourceScanner scanner) {
+        this.scanner = scanner;
+    }
     @Override
     public boolean visit(TypeDeclaration node) {
         ITypeBinding type = node.resolveBinding();
@@ -25,6 +29,7 @@ public class TypeProcessor extends ASTVisitor {
             */
             logger.info(String.format("Type name : %s", type.getName()));
             logger.info(String.format("-- qualified name : %s", type.getQualifiedName()));
+            logger.info(String.format("-- comment : %s", scanner.getPreviousComment(node)));
         }
 
         return super.visit(node);
@@ -37,7 +42,7 @@ public class TypeProcessor extends ASTVisitor {
         if( method != null ) {
             logger.info(String.format("\tMethod name : %s", method.getName()));
             logger.info(String.format("\t-- key : %s", method.getKey()));
-
+            logger.info(String.format("-- comment : %s", scanner.getPreviousComment(node)));
             // modifiers
             int modifiers = method.getModifiers();
             //Modifier.isFinal(modifiers);

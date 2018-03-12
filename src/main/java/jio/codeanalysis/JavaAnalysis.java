@@ -1,8 +1,11 @@
 package jio.codeanalysis;
 
+import jio.codeanalysis.java.processor.SourceScanner;
 import jio.codeanalysis.java.processor.TypeProcessor;
 import jio.codeanalysis.util.ParserEnvironment;
+import jio.codeanalysis.util.SourceFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -25,6 +28,8 @@ public class JavaAnalysis {
 
         ASTParser parser = ASTParser.newParser(AST.JLS9);
 
+        Map options = JavaCore.getOptions();
+        parser.setCompilerOptions(options);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
         parser.setBindingsRecovery(true);
@@ -39,16 +44,18 @@ public class JavaAnalysis {
                         parsedCompilationUnits.put(sourceFilePath, ast);
                     }
                 }, new NullProgressMonitor());
-        /*
-        parser.setSource( SourceFile.readFileToCharArray(sourceFilePath) );
-        parser.setUnitName(sourceFilePath);
-        final CompilationUnit cu = (CompilationUnit) parser.createAST(new NullProgressMonitor());
-        cu.recordModifications();
-        cu.accept( new TypeProcessor() );
-        */
-        for(CompilationUnit cu : parsedCompilationUnits.values()) {
+
+        SourceScanner scanner = null;
+        for(String filePath : parsedCompilationUnits.keySet()) {
+            char[] sourceCode = SourceFile.readFileToCharArray(filePath);
+            if( scanner == null ) {
+                 scanner = new SourceScanner(sourceCode);
+            } else {
+                scanner.setSource(sourceCode);
+            }
+            CompilationUnit cu = parsedCompilationUnits.get(filePath);
             cu.recordModifications();
-            cu.accept( new TypeProcessor() );
+            cu.accept( new TypeProcessor(scanner) );
         }
     }
 
