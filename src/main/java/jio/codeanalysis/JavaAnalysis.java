@@ -34,7 +34,7 @@ public class JavaAnalysis {
         parser.setResolveBindings(true);
         parser.setBindingsRecovery(true);
         parser.setEnvironment(ParserEnvironment.getClassPath()
-                , new String[] {"/home/hijam/dev/jio.codeanalysis/src/test/resources/"}
+                , new String[] {"/root/dev/jio.codeanalysis/src/test/resources/"}
                 , ParserEnvironment.getEncoding()
                 , true);
         parser.createASTs(sourceFilePath, ParserEnvironment.getEncoding(), new String[0]
