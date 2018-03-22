@@ -26,6 +26,33 @@ public class JavaAnalysis {
     public void parse(String[] sourceFilePath) {
         final Map<String, CompilationUnit> parsedCompilationUnits = new HashMap<>();
 
+        ASTParser parser = getParser();
+        parser.createASTs(sourceFilePath, ParserEnvironment.getEncoding(), new String[0]
+                , new FileASTRequestor() {
+                    @Override
+                    public void acceptAST(String sourceFilePath, CompilationUnit ast) {
+                        parsedCompilationUnits.put(sourceFilePath, ast);
+                    }
+                }, new NullProgressMonitor());
+
+        SourceScanner scanner = new SourceScanner();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        
+        for(String filePath : parsedCompilationUnits.keySet()) {
+            char[] sourceCode = SourceFile.readFileToCharArray(filePath);
+            scanner.setSource(sourceCode);
+
+            CompilationUnit cu = parsedCompilationUnits.get(filePath);
+            cu.recordModifications();
+            cu.accept( new TypeProcessor(session, scanner) );
+        }
+
+        session.gettransaction().commit();
+        session.close();
+    }
+
+    private ASTParser getParser() {
         ASTParser parser = ASTParser.newParser(AST.JLS9);
 
         Map options = JavaCore.getOptions();
@@ -37,27 +64,8 @@ public class JavaAnalysis {
                 , new String[] {"/root/dev/jio.codeanalysis/src/test/resources/"}
                 , ParserEnvironment.getEncoding()
                 , true);
-        parser.createASTs(sourceFilePath, ParserEnvironment.getEncoding(), new String[0]
-                , new FileASTRequestor() {
-                    @Override
-                    public void acceptAST(String sourceFilePath, CompilationUnit ast) {
-                        parsedCompilationUnits.put(sourceFilePath, ast);
-                    }
-                }, new NullProgressMonitor());
 
-        SourceScanner scanner = null;
-        for(String filePath : parsedCompilationUnits.keySet()) {
-            char[] sourceCode = SourceFile.readFileToCharArray(filePath);
-            if( scanner == null ) {
-                 scanner = new SourceScanner(sourceCode);
-            } else {
-                scanner.setSource(sourceCode);
-            }
-            CompilationUnit cu = parsedCompilationUnits.get(filePath);
-            cu.recordModifications();
-            cu.accept( new TypeProcessor(scanner) );
-        }
+        return parser;
     }
-
 }
 

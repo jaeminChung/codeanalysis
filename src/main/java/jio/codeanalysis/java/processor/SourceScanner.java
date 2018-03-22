@@ -15,12 +15,11 @@ public class SourceScanner {
     public SourceScanner(char[] source) {
         Scanner scanner = new Scanner(true, false, false
                 , ClassFileConstants.JDK1_8, null, null, true);
-        scanner.setSource(source);
-        tokenScanner = new TokenScanner(scanner);
     }
 
     public void setSource(char[] source) {
         tokenScanner.getScanner().setSource(source);
+        tokenScanner = new TokenScanner(scanner);
     }
     public String getComment(ASTNode node) {
         int nodeStart = node.getStartPosition();
@@ -48,11 +47,11 @@ public class SourceScanner {
 	public int getTokenCommentStart(int lastPos, int nodeStart) throws CoreException {
 		tokenScanner.setOffset(lastPos);
 
-		int prevEndPos= lastPos;
+		int res= -1;
+        /*
+        int prevEndPos= lastPos;
 		int prevEndLine= prevEndPos > 0 ? tokenScanner.getLineOfOffset(prevEndPos - 1) : 0;
 		int nodeLine= tokenScanner.getLineOfOffset(nodeStart);
-		
-		int res= -1;
 
 		int curr= tokenScanner.readNextWithEOF(false);
 		int currStartPos= tokenScanner.getCurrentStartOffset();
@@ -82,6 +81,7 @@ public class SourceScanner {
 		if (currStartLine - prevEndLine > 1) {
 			return nodeStart;
 		}			
+        */
 		return res;
 	}
 }

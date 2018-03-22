@@ -1,14 +1,17 @@
 package jio.codeanalysis.java.processor;
 
 import org.eclipse.jdt.core.dom.*;
-
 import java.util.logging.Logger;
+
+import jio.codeanalysis.java.model.JavaType;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());
     private SourceScanner scanner;
+    private Session session;
 
-    public TypeProcessor(SourceScanner scanner) {
+    public TypeProcessor(Session session, SourceScanner scanner) {
+        this.session = session;
         this.scanner = scanner;
     }
     @Override
@@ -16,22 +19,11 @@ public class TypeProcessor extends ASTVisitor {
         ITypeBinding type = node.resolveBinding();
 
         if( type != null ) {
-            /*
             JavaType javaType = new JavaType();
             javaType.setQualifiedName(type.getQualifiedName());
             javaType.setTypeName(type.getName());
 
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
             session.save(javaType);
-            session.getTransaction().commit();
-            session.close();
-            */
-            //System.out.println(TypeProcessor.class.getClassLoader().getResource("logging.properties"));
-            
-            logger.info(String.format("Type name : %s", type.getName()));
-            logger.info(String.format("-- qualified name : %s", type.getQualifiedName()));
-            logger.info(String.format("-- comment : %s", scanner.getComment(node)));
         }
 
         return super.visit(node);
