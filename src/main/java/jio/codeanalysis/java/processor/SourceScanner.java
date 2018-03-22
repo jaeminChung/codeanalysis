@@ -11,9 +11,10 @@ import java.util.logging.Logger;
 public class SourceScanner {
     private final static Logger logger = Logger.getLogger(SourceScanner.class.getName());
     private TokenScanner tokenScanner;
+    private Scanner scanner;
 
-    public SourceScanner(char[] source) {
-        Scanner scanner = new Scanner(true, false, false
+    public SourceScanner() {
+        scanner = new Scanner(true, false, false
                 , ClassFileConstants.JDK1_8, null, null, true);
     }
 

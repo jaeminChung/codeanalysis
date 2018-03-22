@@ -2,6 +2,7 @@ package jio.codeanalysis;
 
 import jio.codeanalysis.java.processor.SourceScanner;
 import jio.codeanalysis.java.processor.TypeProcessor;
+import jio.codeanalysis.util.HibernateUtil;
 import jio.codeanalysis.util.ParserEnvironment;
 import jio.codeanalysis.util.SourceFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -10,6 +11,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
+import org.hibernate.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,10 +47,10 @@ public class JavaAnalysis {
 
             CompilationUnit cu = parsedCompilationUnits.get(filePath);
             cu.recordModifications();
-            cu.accept( new TypeProcessor(session, scanner) );
+            cu.accept( new TypeProcessor( session, scanner) );
         }
 
-        session.gettransaction().commit();
+        session.getTransaction().commit();
         session.close();
     }
 

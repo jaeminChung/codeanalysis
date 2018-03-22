@@ -1,9 +1,10 @@
 package jio.codeanalysis.java.processor;
 
-import org.eclipse.jdt.core.dom.*;
-import java.util.logging.Logger;
-
 import jio.codeanalysis.java.model.JavaType;
+import org.eclipse.jdt.core.dom.*;
+import org.hibernate.Session;
+
+import java.util.logging.Logger;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());

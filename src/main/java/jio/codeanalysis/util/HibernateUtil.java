@@ -33,7 +33,7 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public static Session openSession() {
+    private static Session openSession() {
         return getSessionFactory().openSession();
     }
 
