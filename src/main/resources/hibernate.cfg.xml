@@ -14,5 +14,6 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <mapping class="jio.codeanalysis.java.model.JavaType" />
         <mapping class="jio.codeanalysis.java.model.JavaMethod" />
+        <mapping class="jio.codeanalysis.java.model.CallRelation" />
     </session-factory>
 </hibernate-configuration>
