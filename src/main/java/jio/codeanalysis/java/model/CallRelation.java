@@ -2,14 +2,17 @@ package jio.codeanalysis.java.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table( name="call_relation" )
 public class CallRelation {
+    @Id
     @Column( name="caller" )
     private String caller;
 
+    @Id
     @Column( name="callee" )
     private String callee;
 
