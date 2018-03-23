@@ -19,8 +19,8 @@ public class SourceScanner {
     }
 
     public void setSource(char[] source) {
-        tokenScanner.getScanner().setSource(source);
-        tokenScanner = new TokenScanner(scanner);
+        //tokenScanner = new TokenScanner(scanner);
+        //        tokenScanner.getScanner().setSource(source);
     }
     public String getComment(ASTNode node) {
         int nodeStart = node.getStartPosition();

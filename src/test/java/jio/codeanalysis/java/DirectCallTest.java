@@ -9,7 +9,7 @@ public class DirectCallTest {
     public void directCall() {
         JavaAnalysis ja = new JavaAnalysis();
         ///home/hijam/dev/jio.codeanalysis/src/test/resources
-        String[] sourceFilePath = {"/root/dev/jio.codeanalysis/src/test/resources/DirectCall.java"};
+        String[] sourceFilePath = {"/root/dev/jio.codeanalysis/src/test/resources/DirectCallee.java"};
         //sourceFilePath[1] = "/home/hijam/dev/jio.codeanalysis/src/test/resources/DirectCallee.java";
         ja.parse(sourceFilePath);
     }

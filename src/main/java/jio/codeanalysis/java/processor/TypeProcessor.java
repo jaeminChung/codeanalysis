@@ -24,7 +24,7 @@ public class TypeProcessor extends ASTVisitor {
             javaType.setQualifiedName(type.getQualifiedName());
             javaType.setTypeName(type.getName());
 
-            session.save(javaType);
+            session.saveOrUpdate(javaType);
         }
 
         return super.visit(node);
@@ -37,7 +37,7 @@ public class TypeProcessor extends ASTVisitor {
         if( method != null ) {
             logger.info(String.format("\tMethod name : %s", method.getName()));
             logger.info(String.format("\t-- key : %s", method.getKey()));
-            logger.info(String.format("-- comment : %s", scanner.getComment(node)));
+
             // modifiers
             int modifiers = method.getModifiers();
             //Modifier.isFinal(modifiers);
