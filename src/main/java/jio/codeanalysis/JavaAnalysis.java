@@ -22,13 +22,13 @@ public class JavaAnalysis {
 
     public static void main(String[] args) {
         JavaAnalysis ja = new JavaAnalysis();
-        ja.parse(args);
+        ja.parse(args, "");
     }
 
-    public void parse(String[] sourceFilePath) {
+    public void parse(String[] sourceFilePath, String projectPath) {
         final Map<String, CompilationUnit> parsedCompilationUnits = new HashMap<>();
 
-        ASTParser parser = getParser();
+        ASTParser parser = getParser(projectPath);
         parser.createASTs(sourceFilePath, ParserEnvironment.getEncoding(), new String[0]
                 , new FileASTRequestor() {
                     @Override
@@ -54,7 +54,7 @@ public class JavaAnalysis {
         session.close();
     }
 
-    private ASTParser getParser() {
+    private ASTParser getParser(String projectPath) {
         ASTParser parser = ASTParser.newParser(AST.JLS9);
 
         Map options = JavaCore.getOptions();
@@ -63,7 +63,7 @@ public class JavaAnalysis {
         parser.setResolveBindings(true);
         parser.setBindingsRecovery(true);
         parser.setEnvironment(ParserEnvironment.getClassPath()
-                , new String[] {"/home/hijam/dev/jio.codeanalysis/src/test/resources/"}
+                , new String[] {projectPath}
                 , ParserEnvironment.getEncoding()
                 , true);
 
