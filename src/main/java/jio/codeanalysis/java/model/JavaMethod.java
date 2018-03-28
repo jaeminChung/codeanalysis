@@ -9,18 +9,18 @@ import javax.persistence.Table;
 @Table(name="java_method")
 public class JavaMethod {
     @Id
-    @Column(name="quilified_name")
-    private String quilifiedName;
+    @Column(name="qualified_name")
+    private String qualifiedName;
 
     @Column(name="method_name")
     private String methodName;
 
-    public String getQuilifiedName() {
-        return quilifiedName;
+    public String getQualifiedName() {
+        return qualifiedName;
     }
 
-    public void setQuilifiedName(String quilifiedName) {
-        this.quilifiedName = quilifiedName;
+    public void setQualifiedName(String qualifiedName) {
+        this.qualifiedName = qualifiedName;
     }
 
     public String getMethodName() {

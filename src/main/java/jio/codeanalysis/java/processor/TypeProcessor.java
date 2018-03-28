@@ -1,5 +1,7 @@
 package jio.codeanalysis.java.processor;
 
+import jio.codeanalysis.java.model.CallRelation;
+import jio.codeanalysis.java.model.JavaMethod;
 import jio.codeanalysis.java.model.JavaType;
 import org.eclipse.jdt.core.dom.*;
 import org.hibernate.Session;
@@ -35,9 +37,11 @@ public class TypeProcessor extends ASTVisitor {
         IMethodBinding method = node.resolveBinding();
 
         if( method != null ) {
-            logger.info(String.format("\tMethod name : %s", method.getName()));
-            logger.info(String.format("\t-- key : %s", method.getKey()));
+            JavaMethod javaMethod = new JavaMethod();
+            javaMethod.setMethodName(method.getName());
+            javaMethod.setQualifiedName(method.getKey());
 
+            session.saveOrUpdate(javaMethod);
             // modifiers
             int modifiers = method.getModifiers();
             //Modifier.isFinal(modifiers);
@@ -67,12 +71,39 @@ public class TypeProcessor extends ASTVisitor {
         IMethodBinding method = node.resolveMethodBinding();
 
         if( method != null ) {
-            logger.info(String.format("\t\t\tMethod invocation : %s", method.getName()));
-            logger.info(String.format("\t\t\tMethod's type qualified name : %s", method.getDeclaringClass().getQualifiedName()));
-            logger.info(String.format("\t\t\tMethod invocation node : %s", node.toString()));
+            ASTNode parent = node.getParent();
+            while( (parent instanceof MethodDeclaration) == false ) {
+                parent = parent.getParent();
+            }
+            String caller = getMethodQualifiedName( (MethodDeclaration) parent );
+            String callee = getMethodQualifiedName( method );
+
+            CallRelation callRelation = new CallRelation();
+            callRelation.setCaller(caller);
+            callRelation.setCallee(callee);
+
+            session.saveOrUpdate(callRelation);
         }
 
         return super.visit(node);
+    }
+
+    private String getMethodQualifiedName(MethodDeclaration node) {
+        String qualifiedName = "";
+
+        IMethodBinding method = node.resolveBinding();
+        if( method != null ) {
+            qualifiedName = getMethodQualifiedName(method);
+        }
+
+        return qualifiedName;
+    }
+
+    private String getMethodQualifiedName(IMethodBinding method) {
+        String typeQualifiedName = method.getDeclaringClass().getQualifiedName();
+        String methodName = method.getName();
+
+        return String.format("%s.%s", typeQualifiedName, methodName);
     }
 
 }

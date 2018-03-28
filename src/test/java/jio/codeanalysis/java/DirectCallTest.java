@@ -1,9 +1,9 @@
 package jio.codeanalysis.java;
 
-import org.junit.Test;
-import java.net.URL;
-
 import jio.codeanalysis.JavaAnalysis;
+import org.junit.Test;
+
+import java.net.URL;
 
 public class DirectCallTest {
     @Test

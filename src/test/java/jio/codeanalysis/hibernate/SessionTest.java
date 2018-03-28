@@ -35,7 +35,7 @@ public class SessionTest {
         javaType.setTypeName("JavaType");
 
         JavaMethod javaMethod = new JavaMethod();
-        javaMethod.setQuilifiedName("jio.codeanalysis.java.model.JavaType.method");
+        javaMethod.setQualifiedName("jio.codeanalysis.java.model.JavaType.method");
         javaMethod.setMethodName("method");
 
         Session session = HibernateUtil.getSessionFactory().openSession();
