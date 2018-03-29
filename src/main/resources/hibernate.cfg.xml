@@ -11,7 +11,7 @@
         <property name="hibernate.connection.pool_size">10</property>
         <property name="show_sql">true</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
         <mapping class="jio.codeanalysis.java.model.JavaType" />
         <mapping class="jio.codeanalysis.java.model.JavaMethod" />
         <mapping class="jio.codeanalysis.java.model.CallRelation" />
