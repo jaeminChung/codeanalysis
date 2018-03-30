@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.hibernate.Session;
 
 import java.util.logging.Logger;
+import java.util.StringJoiner;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());
@@ -101,9 +102,16 @@ public class TypeProcessor extends ASTVisitor {
 
     private String getMethodQualifiedName(IMethodBinding method) {
         String typeQualifiedName = method.getDeclaringClass().getQualifiedName();
-        String methodName = method.getName();
+        String methodName = method.getName() + getParameters(method);
 
         return String.format("%s.%s", typeQualifiedName, methodName);
     }
 
+    private String getParameters(IMethodBinding method) {
+        StringJoiner joiner = new StringJoiner(",");
+        for(ITypeBinding tb : method.getParameterTypes()) {
+            joiner.add(tb.getName());
+        }
+        return String.format("(%s)", joiner.toString());
+    }
 }
