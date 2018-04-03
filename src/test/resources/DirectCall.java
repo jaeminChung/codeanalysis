@@ -1,9 +1,10 @@
-/*
+/**
  * @classname Direct call
  * @author hijam
  * @version 1.0
  */
 public class DirectCall {
+    String globalB = "global b";
     /*
      * @methodname call
      * @return void
@@ -12,7 +13,10 @@ public class DirectCall {
      */
     public void call() {
         DirectCallee callee = new DirectCallee();
-        int i = callee.calleeMethod();
+        String s = "abc";
+        String methodName = "foo"
+        s = s + methodName;
+        int i = callee.calleeMethod(s, globalB, new DirectCallee());
         i = Integer.valueOf("3");
     }
 }
