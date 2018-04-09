@@ -10,8 +10,8 @@ public class DirectCallTest {
     public void directCall() {
         JavaAnalysis ja = new JavaAnalysis();
 
-        URL filePath = DirectCallTest.class.getResource("/DirectCall.java");
-        URL projectPath = DirectCallTest.class.getResource("/");
+        URL filePath = DirectCallTest.class.getResource("/java/DirectCall.java");
+        URL projectPath = DirectCallTest.class.getResource("/java/");
         String[] sourceFilePath = {filePath.getPath()};
 
         ja.parse(sourceFilePath, projectPath.getPath());
