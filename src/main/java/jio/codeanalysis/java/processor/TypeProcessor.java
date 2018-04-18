@@ -2,6 +2,7 @@ package jio.codeanalysis.java.processor;
 
 import jio.codeanalysis.java.model.CallRelation;
 import jio.codeanalysis.java.model.JavaMethod;
+import jio.codeanalysis.java.model.JavaParameter;
 import jio.codeanalysis.java.model.JavaType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -46,33 +47,61 @@ public class TypeProcessor extends ASTVisitor {
             javaMethod.setMethodName(method.getName());
             javaMethod.setQualifiedName(getMethodQualifiedName(method));
 
-            session.saveOrUpdate(javaMethod);
             // modifiers
-            int modifiers = method.getModifiers();
-            javaMethod.setFinal(Modifier.isFinal(modifiers));
-            javaMethod.setStatic(Modifier.isStatic(modifiers));
-            javaMethod.setAbstract(Modifier.isAbstract(modifiers));
-            javaMethod.setPrivate(Modifier.isPrivate(modifiers));
-            javaMethod.setPublic(Modifier.isPublic(modifiers));
-            javaMethod.setProtected(Modifier.isProtected(modifiers));
+            setModifiers(javaMethod, method);
 
+            session.saveOrUpdate(javaMethod);
             // input parameter
-            int index = 0;
-            for ( Object o : node.parameters() ) {
-                if( o instanceof VariableDeclaration ) {
-                    IVariableBinding var = ((VariableDeclaration) o).resolveBinding();
-                    logger.info(String.format("\t\t#%s Parameter Type : %s", index, var.getType().getQualifiedName()));
-                    logger.info(String.format("\t\t#%s Parameter Name : %s", index, var.getName()));
-                }
-                index++;
-            }
+            saveInputParameter(node, javaMethod);
 
             //output parameter
-            logger.info(String.format("\t\tReturn Type : %s", method.getReturnType().getQualifiedName()));
-
+            saveReturnParameter(method, javaMethod);
         }
 
         return super.visit(node);
+    }
+
+    private void setModifiers(JavaMethod javaMethod, IMethodBinding method) {
+        int modifiers = method.getModifiers();
+
+        javaMethod.setFinal(Modifier.isFinal(modifiers));
+        javaMethod.setStatic(Modifier.isStatic(modifiers));
+        javaMethod.setAbstract(Modifier.isAbstract(modifiers));
+        javaMethod.setPrivate(Modifier.isPrivate(modifiers));
+        javaMethod.setPublic(Modifier.isPublic(modifiers));
+        javaMethod.setProtected(Modifier.isProtected(modifiers));
+    }
+
+    private void saveInputParameter(MethodDeclaration node, JavaMethod javaMethod) {
+        int seq = 0;
+        JavaParameter param;
+        for ( Object o : node.parameters() ) {
+            if( o instanceof VariableDeclaration ) {
+                IVariableBinding var = ((VariableDeclaration) o).resolveBinding();
+                if( var != null ) {
+                    param = new JavaParameter();
+                    param.setInput(true);
+                    param.setMethodQualifiedName(javaMethod.getQualifiedName());
+                    param.setParameterName(var.getName());
+                    param.setTypeQualifiedName(var.getType().getQualifiedName());
+                    param.setParamSeq(seq);
+
+                    session.saveOrUpdate(param);
+                }
+            }
+            seq++;
+        }
+    }
+
+    private void saveReturnParameter(IMethodBinding method, JavaMethod javaMethod) {
+        JavaParameter param = new JavaParameter();
+        param.setInput(false);
+        param.setMethodQualifiedName(javaMethod.getQualifiedName());
+        param.setParameterName(javaMethod.getMethodName());
+        param.setTypeQualifiedName(method.getReturnType().getQualifiedName());
+        param.setParamSeq(-1);
+
+        session.saveOrUpdate(param);
     }
 
     @Override
