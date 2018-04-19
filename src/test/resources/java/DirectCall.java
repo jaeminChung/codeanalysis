@@ -19,4 +19,12 @@ public class DirectCall {
         int i = callee.calleeMethod(s, globalB, new DirectCallee());
         i = Integer.valueOf("3");
     }
+
+    private String call(List<String> list) {
+        for(String s : list) {
+            System.out.println(s);
+        }
+
+        return "OK";
+    }
 }

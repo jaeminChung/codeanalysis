@@ -18,12 +18,34 @@ public class JavaParameter implements Serializable {
     @Column(name="type_qualified_name")
     private String typeQualifiedName;
 
+    @Column(name="param_qualified_name")
+    private String paramQualifiedName;
+    
+    @Column(name="is_array")
+    private boolean isArray;
+    
     @Column(name="is_input")
     private boolean isInput;
 
     @Column(name="param_seq")
     private int paramSeq;
 
+    public String getParamQualifiedName() {
+        return paramQualifiedName;
+    }
+
+    public void setParamQualifiedName(String paramQualifiedName) {
+        this.paramQualifiedName = paramQualifiedName;
+    }
+
+    public boolean isArray() {
+        return isArray;
+    }
+
+    public void setArray(boolean isArray) {
+        this.isArray = isArray;
+    }
+    
     public String getParameterName() {
         return parameterName;
     }

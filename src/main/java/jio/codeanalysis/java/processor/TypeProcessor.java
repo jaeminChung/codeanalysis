@@ -77,13 +77,23 @@ public class TypeProcessor extends ASTVisitor {
         JavaParameter param;
         for ( Object o : node.parameters() ) {
             if( o instanceof VariableDeclaration ) {
-                IVariableBinding var = ((VariableDeclaration) o).resolveBinding();
+                //IVariableBinding var = ((VariableDeclaration) o).resolveBinding();
+                VariableDeclaration var = (VariableDeclaration) o;
                 if( var != null ) {
                     param = new JavaParameter();
                     param.setInput(true);
                     param.setMethodQualifiedName(javaMethod.getQualifiedName());
-                    param.setParameterName(var.getName());
-                    param.setTypeQualifiedName(var.getType().getQualifiedName());
+                    param.setParameterName(var.getName().getIdentifier());
+                    if( var instanceof SingleVariableDeclaration ) {
+                        SingleVariableDeclaration svd = (SingleVariableDeclaration) var;
+                        Type paramType = svd.getType();
+                        if( paramType.isParameterizedType() ) {
+                            ParameterizedType pt = (ParameterizedType) paramType;
+                        }
+                        param.setArray(paramType.isArrayType());
+                    }
+                    
+                    param.setTypeQualifiedName(var.resolveBinding().getType().getQualifiedName());
                     param.setParamSeq(seq);
 
                     session.saveOrUpdate(param);
@@ -113,7 +123,7 @@ public class TypeProcessor extends ASTVisitor {
                 SimpleName simpleName = (SimpleName) o;
                 IBinding vb = simpleName.resolveBinding();
                 if( vb != null ) {
-                    searchVariable(vb.getJavaElement(), vb.getJavaElement());
+                    //searchVariable(vb.getJavaElement(), vb.getJavaElement());
                 }
             }
         }
