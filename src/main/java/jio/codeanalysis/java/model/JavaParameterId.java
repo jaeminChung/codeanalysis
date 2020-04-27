@@ -3,7 +3,9 @@ package jio.codeanalysis.java.model;
 import java.io.Serializable;
 
 public class JavaParameterId implements Serializable {
-    protected String methodQualifiedName;
+	private static final long serialVersionUID = 1L;
+
+	protected String methodQualifiedName;
 
     protected String parameterName;
 

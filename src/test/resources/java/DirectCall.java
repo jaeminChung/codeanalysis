@@ -1,6 +1,6 @@
 /**
  * @classname Direct call
- * @author hijam
+ * @author jmchung
  * @version 1.0
  */
 public class DirectCall {

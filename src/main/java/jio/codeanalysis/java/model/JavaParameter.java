@@ -7,7 +7,9 @@ import java.io.Serializable;
 @Table(name="java_parameter")
 @IdClass(JavaParameterId.class)
 public class JavaParameter implements Serializable {
-    @Id
+	private static final long serialVersionUID = 7567518805088537554L;
+
+	@Id
     @Column(name="method_qualified_name")
     private String methodQualifiedName;
 

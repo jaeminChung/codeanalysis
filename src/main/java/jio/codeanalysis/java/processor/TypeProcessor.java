@@ -16,12 +16,10 @@ import java.util.logging.Logger;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());
-    private SourceScanner scanner;
     private Session session;
 
-    public TypeProcessor(Session session, SourceScanner scanner) {
+    public TypeProcessor(Session session) {
         this.session = session;
-        this.scanner = scanner;
     }
     @Override
     public boolean visit(TypeDeclaration node) {
@@ -77,27 +75,24 @@ public class TypeProcessor extends ASTVisitor {
         JavaParameter param;
         for ( Object o : node.parameters() ) {
             if( o instanceof VariableDeclaration ) {
-                //IVariableBinding var = ((VariableDeclaration) o).resolveBinding();
                 VariableDeclaration var = (VariableDeclaration) o;
-                if( var != null ) {
-                    param = new JavaParameter();
-                    param.setInput(true);
-                    param.setMethodQualifiedName(javaMethod.getQualifiedName());
-                    param.setParameterName(var.getName().getIdentifier());
-                    if( var instanceof SingleVariableDeclaration ) {
-                        SingleVariableDeclaration svd = (SingleVariableDeclaration) var;
-                        Type paramType = svd.getType();
-                        if( paramType.isParameterizedType() ) {
-                            ParameterizedType pt = (ParameterizedType) paramType;
-                        }
-                        param.setArray(paramType.isArrayType());
-                    }
-                    
-                    param.setTypeQualifiedName(var.resolveBinding().getType().getQualifiedName());
-                    param.setParamSeq(seq);
 
-                    session.saveOrUpdate(param);
+                param = new JavaParameter();
+                param.setInput(true);
+                param.setMethodQualifiedName(javaMethod.getQualifiedName());
+                param.setParameterName(var.getName().getIdentifier());
+                param.setTypeQualifiedName(var.resolveBinding().getType().getQualifiedName());
+                param.setParamSeq(seq);
+                if( var instanceof SingleVariableDeclaration ) {
+                    SingleVariableDeclaration svd = (SingleVariableDeclaration) var;
+                    Type paramType = svd.getType();
+                    if( paramType.isParameterizedType() ) {
+                        ParameterizedType pt = (ParameterizedType) paramType;
+                    }
+                    param.setArray(paramType.isArrayType());
                 }
+
+                session.saveOrUpdate(param);
             }
             seq++;
         }

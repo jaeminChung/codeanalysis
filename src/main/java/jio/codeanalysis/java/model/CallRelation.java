@@ -10,7 +10,9 @@ import javax.persistence.Table;
 @Entity
 @Table( name="call_relation" )
 public class CallRelation implements Serializable {
-    @Id
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @Column( name="caller" )
     private String caller;
 

@@ -40,7 +40,8 @@ public class HibernateUtil {
     public static void deleteAll(String type) {
         Session session = openSession();
         Transaction tx = session.beginTransaction();
-        List elements = session.createQuery("from " + type + " b").list();
+        @SuppressWarnings("unchecked")
+		List<Object> elements = (List<Object>) session.createQuery("from " + type + " b").list();
         for (Object o : elements) {
             session.delete(o);
         }

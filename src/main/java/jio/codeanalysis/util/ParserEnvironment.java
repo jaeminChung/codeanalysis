@@ -14,7 +14,7 @@ public class ParserEnvironment {
 
     public static String[] getClassPath() {
         String property = System.getProperty("java.class.path", ".");
-        String[] classPath = property.split(File.pathSeparator);
+        //String[] classPath = property.split(File.pathSeparator);
         logger.info(String.format("Class path : %s", property));
         return property.split(File.pathSeparator);
     }
