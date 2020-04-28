@@ -14,6 +14,6 @@ public class DirectCallTest {
         URL projectPath = DirectCallTest.class.getResource("/java/");
         String[] sourceFilePath = {filePath.getPath()};
 
-        ja.parse(sourceFilePath, projectPath.getPath());
+        ja.parse(projectPath.getPath(), sourceFilePath);
     }
 }

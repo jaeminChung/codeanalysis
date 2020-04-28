@@ -5,29 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
 @Entity
 @Table(name="java_type")
+@EqualsAndHashCode(of = "qualifiedName")
+@ToString
 public class JavaType {
     @Id
-    @Column(name="qualified_name")
     private String qualifiedName;
 
-    @Column(name="type_name")
     private String typeName;
-
-    public String getQualifiedName() {
-        return qualifiedName;
-    }
-
-    public void setQualifiedName(String qualifiedName) {
-        this.qualifiedName = qualifiedName;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
 }

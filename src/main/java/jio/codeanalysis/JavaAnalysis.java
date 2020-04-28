@@ -23,16 +23,21 @@ import jio.codeanalysis.util.SourceFile;
 public class JavaAnalysis {
     static final Logger logger = Logger.getLogger(JavaAnalysis.class.getName());
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         JavaAnalysis ja = new JavaAnalysis();
-        ja.parse(args, "");
+        ja.parse("", args);
     }
 
-    public void parse(String[] sourceFilePath, String projectPath) {
+    private boolean isConditionCall() {
+    	return true;
+    }
+    public void parse(String projectPath, String... sourceFilePaths) {
         final Map<String, CompilationUnit> parsedCompilationUnits = new HashMap<>();
 
+        if(isConditionCall()) {
+        	
         ASTParser parser = getParser(projectPath);
-        parser.createASTs(sourceFilePath, ParserEnvironment.getEncoding(), new String[0]
+        parser.createASTs(sourceFilePaths, ParserEnvironment.getEncoding(), new String[0]
                 , new FileASTRequestor() {
                     @Override
                     public void acceptAST(String sourceFilePath, CompilationUnit ast) {
@@ -42,13 +47,13 @@ public class JavaAnalysis {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        
         for(String filePath : parsedCompilationUnits.keySet()) {
-            char[] sourceCode = SourceFile.readFileToCharArray(filePath);
 
             CompilationUnit cu = parsedCompilationUnits.get(filePath);
             cu.recordModifications();
             cu.accept( new TypeProcessor( session ) );
+            
+            char[] sourceCode = SourceFile.readFileToCharArray(filePath);
             @SuppressWarnings("unchecked")
 			List<Comment> comments = (List<Comment>) cu.getCommentList();
             for(Comment comment: comments) {
@@ -58,10 +63,13 @@ public class JavaAnalysis {
 
         session.getTransaction().commit();
         session.close();
+        
+        
+        }
     }
 
     private ASTParser getParser(String projectPath) {
-        ASTParser parser = ASTParser.newParser(AST.JLS9);
+        ASTParser parser = ASTParser.newParser(AST.JLS8);
 
         Map<String, String> options = JavaCore.getOptions();
         parser.setCompilerOptions(options);

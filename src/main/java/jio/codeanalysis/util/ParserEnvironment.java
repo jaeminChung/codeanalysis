@@ -6,15 +6,8 @@ import java.util.logging.Logger;
 public class ParserEnvironment {
     private static final Logger logger = Logger.getLogger(ParserEnvironment.class.getName());
 
-    private static final String UTF_8 = "UTF-8";
-    private static final String SJIS = "SJIS";
-    private static final String EUC_JP = "EUC-JP";
-    private static final String EUC_KR = "EUC-KR";
-    private static final String MS949 = "MS949";
-
     public static String[] getClassPath() {
         String property = System.getProperty("java.class.path", ".");
-        //String[] classPath = property.split(File.pathSeparator);
         logger.info(String.format("Class path : %s", property));
         return property.split(File.pathSeparator);
     }
@@ -24,10 +17,29 @@ public class ParserEnvironment {
     }
 
     public static String[] getEncoding() {
-        return new String[] {UTF_8};
+        return new String[] {Encoding.UTF_8.getValue()};
     }
 
     public static String getLineSeparator() {
         return System.getProperty("line.separator", "\n");
+    }
+    
+    public enum Encoding {
+    	UTF_8("UTF-8"),
+    	SJIS("SJIS"),
+    	EUC_JP("EUC-JP"),
+    	EUC_KR("EUC-KR"),
+    	MS949("MS949");
+    	
+    	
+    	String value;
+    	
+    	Encoding(String value) {
+    		this.value = value;
+    	}
+    	
+    	public String getValue() {
+    		return value;
+    	}
     }
 }
