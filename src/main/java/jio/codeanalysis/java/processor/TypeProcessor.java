@@ -1,41 +1,97 @@
 package jio.codeanalysis.java.processor;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchMatch;
+import org.eclipse.jdt.core.search.SearchParticipant;
+import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.core.search.SearchRequestor;
+
 import jio.codeanalysis.java.model.CallRelation;
 import jio.codeanalysis.java.model.JavaMethod;
 import jio.codeanalysis.java.model.JavaParameter;
 import jio.codeanalysis.java.model.JavaType;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.search.*;
-import org.hibernate.Session;
-
-import java.util.StringJoiner;
-import java.util.logging.Logger;
+import jio.codeanalysis.java.model.JavaTypeRelation;
 
 public class TypeProcessor extends ASTVisitor {
     private final static Logger logger = Logger.getLogger(TypeProcessor.class.getName());
-    private Session session;
+    private EntityManager em;
+    private final String filePath;
 
-    public TypeProcessor(Session session) {
-        this.session = session;
+    public TypeProcessor(EntityManager em, String filePath) {
+        this.em = em;
+        this.filePath = filePath;
     }
+    
     @Override
     public boolean visit(TypeDeclaration node) {
         ITypeBinding type = node.resolveBinding();
 
-        if( type != null ) {
-            JavaType javaType = new JavaType();
-            javaType.setQualifiedName(type.getQualifiedName());
-            javaType.setTypeName(type.getName());
+        Optional<JavaType> result = createJavaType(type);
+        if( result.isPresent() ) {
+        	JavaType javaType = result.get();
+            javaType.setStartPos(node.getStartPosition());
+            javaType.setLength(node.getLength());
+            javaType.setFilePath(filePath);
 
-            session.saveOrUpdate(javaType);
+            em.merge(javaType);
         }
 
         return super.visit(node);
     }
 
+    private Optional<JavaType> createJavaType(ITypeBinding type) {
+        if( type != null ) {
+            final JavaType javaType = new JavaType();
+            javaType.setQualifiedName(type.getQualifiedName());
+            javaType.setTypeName(type.getName());
+            javaType.setIntrface(type.isInterface());
+
+            createJavaType(type.getSuperclass()).ifPresent(javaType::setSuperClass);
+            em.merge(javaType);
+            List<ITypeBinding> interfaces = Arrays.asList(type.getInterfaces());
+            for(ITypeBinding t : interfaces) {
+            	Optional<JavaType> intrface = createJavaType(t);
+            	intrface.ifPresent(i -> {
+            		JavaTypeRelation im = new JavaTypeRelation();
+            		im.setImplementedClass(javaType);
+            		im.setRealizeInterface(i);
+            		javaType.addSuperInterface(im);
+            		em.persist(im);
+            	});
+            }
+            return Optional.of(javaType);
+        }
+        
+        return Optional.ofNullable(null);
+    }
+    
     @Override
     public boolean visit(MethodDeclaration node) {
         IMethodBinding method = node.resolveBinding();
@@ -48,7 +104,7 @@ public class TypeProcessor extends ASTVisitor {
             // modifiers
             setModifiers(javaMethod, method);
 
-            session.saveOrUpdate(javaMethod);
+            em.persist(javaMethod);
             // input parameter
             saveInputParameter(node, javaMethod);
 
@@ -56,6 +112,7 @@ public class TypeProcessor extends ASTVisitor {
             saveReturnParameter(method, javaMethod);
         }
 
+        node.getBody().accept(new MethodProcessor());
         return super.visit(node);
     }
 
@@ -91,8 +148,6 @@ public class TypeProcessor extends ASTVisitor {
                     }
                     param.setArray(paramType.isArrayType());
                 }
-
-                session.saveOrUpdate(param);
             }
             seq++;
         }
@@ -106,7 +161,7 @@ public class TypeProcessor extends ASTVisitor {
         param.setTypeQualifiedName(method.getReturnType().getQualifiedName());
         param.setParamSeq(-1);
 
-        session.saveOrUpdate(param);
+        em.persist(param);
     }
 
     @Override
@@ -134,7 +189,7 @@ public class TypeProcessor extends ASTVisitor {
             callRelation.setCaller(caller);
             callRelation.setCallee(callee);
 
-            session.saveOrUpdate(callRelation);
+            em.persist(callRelation);
         }
 
         return super.visit(node);

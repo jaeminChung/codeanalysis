@@ -11,6 +11,7 @@ repositories {
 dependencies {
     compile  'org.eclipse.jdt:org.eclipse.jdt.core:3.13.100'
     compile  'org.hibernate:hibernate-core:4.3.6.Final'
+    compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'
     compile  'postgresql:postgresql:9.1-901-1.jdbc4'
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	

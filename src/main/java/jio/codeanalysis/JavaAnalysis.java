@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -12,7 +14,6 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Comment;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FileASTRequestor;
-import org.hibernate.Session;
 
 import jio.codeanalysis.java.processor.CommentProcessor;
 import jio.codeanalysis.java.processor.TypeProcessor;
@@ -28,14 +29,9 @@ public class JavaAnalysis {
         ja.parse("", args);
     }
 
-    private boolean isConditionCall() {
-    	return true;
-    }
     public void parse(String projectPath, String... sourceFilePaths) {
         final Map<String, CompilationUnit> parsedCompilationUnits = new HashMap<>();
 
-        if(isConditionCall()) {
-        	
         ASTParser parser = getParser(projectPath);
         parser.createASTs(sourceFilePaths, ParserEnvironment.getEncoding(), new String[0]
                 , new FileASTRequestor() {
@@ -45,13 +41,12 @@ public class JavaAnalysis {
                     }
                 }, new NullProgressMonitor());
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        EntityManager em = HibernateUtil.getEntityManager();
+        em.getTransaction().begin();
         for(String filePath : parsedCompilationUnits.keySet()) {
 
             CompilationUnit cu = parsedCompilationUnits.get(filePath);
-            cu.recordModifications();
-            cu.accept( new TypeProcessor( session ) );
+            cu.accept( new TypeProcessor( em , filePath) );
             
             char[] sourceCode = SourceFile.readFileToCharArray(filePath);
             @SuppressWarnings("unchecked")
@@ -60,12 +55,9 @@ public class JavaAnalysis {
             	comment.accept(new CommentProcessor(cu, sourceCode));
             }
         }
+        em.getTransaction().commit();
+        HibernateUtil.close();
 
-        session.getTransaction().commit();
-        session.close();
-        
-        
-        }
     }
 
     private ASTParser getParser(String projectPath) {
@@ -75,6 +67,8 @@ public class JavaAnalysis {
         parser.setCompilerOptions(options);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
+        parser.setStatementsRecovery(true);
         parser.setBindingsRecovery(true);
         parser.setEnvironment(ParserEnvironment.getClassPath()
                 , new String[] {projectPath}

@@ -1,25 +1,33 @@
 package jio.codeanalysis.util;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.PersistenceUnitTransactionType;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.jpa.internal.EntityManagerFactoryImpl;
 import org.hibernate.service.ServiceRegistry;
 
-import java.util.List;
-
 public class HibernateUtil {
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static final EntityManager entityManager = createEntityManager();
 
-    private static SessionFactory buildSessionFactory() {
+    private static EntityManager createEntityManager() {
         try {
             // Create the SessionFactory from hibernate.cfg.xml
             Configuration configuration = new Configuration().configure();
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())
                     .build();
-            return configuration.buildSessionFactory(serviceRegistry);
+            EntityManagerFactory factory = new EntityManagerFactoryImpl(
+                    PersistenceUnitTransactionType.RESOURCE_LOCAL, true, null, configuration, serviceRegistry, null);
+
+            return factory.createEntityManager();
 
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
@@ -29,23 +37,11 @@ public class HibernateUtil {
         }
     }
 
-    public static SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public static EntityManager getEntityManager() {
+        return entityManager;
     }
-
-    private static Session openSession() {
-        return getSessionFactory().openSession();
-    }
-
-    public static void deleteAll(String type) {
-        Session session = openSession();
-        Transaction tx = session.beginTransaction();
-        @SuppressWarnings("unchecked")
-		List<Object> elements = (List<Object>) session.createQuery("from " + type + " b").list();
-        for (Object o : elements) {
-            session.delete(o);
-        }
-        tx.commit();
-        session.close();
+    
+    public static void close() {
+    	entityManager.close();
     }
 }
