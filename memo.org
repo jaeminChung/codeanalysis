@@ -1,0 +1,55 @@
+* 리버스
+** 호출관계
+1. 함수 호출 안의 호출(입력인자로서)
+2. 조건문, 반복문 안에서 함수 호출
+3. 연결된 함수 호출
+   - clazz.selectLists().size()
+   - clazz.selectLists().get(2)
+4. 다이나믹 호출
+   - 함수 호출의 입력인자값 추적
+5. 인터페이스 호출
+   - 인터페이스를 구현한 구현체를 모두 호출하는 것으로
+6. 어노테이션 정보(jsp -> java)
+** Statement
+    - Block                         -> Recurse
+    - AssertStatement               -> DefaultStatementProcessor
+    - BreakStatement                -> DefaultStatementProcessor
+    - ConstructorInvocation         -> DefaultStatementProcessor
+    - ContinueStatement             -> DefaultStatementProcessor
+    - EmptyStatement                -> DefaultStatementProcessor
+    - ExpressionStatement           -> DefaultStatementProcessor
+    - LabeledStatement              -> DefaultStatementProcessor
+    - ReturnStatement               -> DefaultStatementProcessor
+    - SuperConstructorInvocation    -> DefaultStatementProcessor
+    - ThrowStatement                -> DefaultStatementProcessor
+    - TypeDeclarationStatement      -> DefaultStatementProcessor
+    - VariableDeclarationStatement  -> DefaultStatementProcessor
+    - DoStatement                   -> FragmentStatementProcessor
+    - EnhancedForStatement          -> FragmentStatementProcessor
+    - ForStatement                  -> FragmentStatementProcessor
+    - IfStatement                   -> FragmentStatementProcessor
+    - SwitchCase                    -> FragmentStatementProcessor
+    - SwitchStatement               -> FragmentStatementProcessor
+    - SynchronizedStatement         -> FragmentStatementProcessor
+    - TryStatement                  -> FragmentStatementProcessor
+    - WhileStatement                -> FragmentStatementProcessor
+** 저장해야 할 정보
+1. 함수 호출 시 입력 문자열 -> 동적 호출
+2. 각 클래스의 물리적 위치 (프로젝트 상태 경로, 확장자 포함)
+3. 각 요소의 파일에서의 위치(라인)
+4. 각 요소의 주석
+5. 프로젝트명
+6. 어노테이션명, 입력값
+7. 상속, 구현 관계
+** 설정
+1. 소스 폴더
+   - 여러개 지정할 수 있도록
+2. 컴파일을 위한 클래스 경로
+   - eclipse project (다른 프로젝트를 포함하고 있을 때)
+   - Maven
+   - Gradle
+3. 빌드경로 완전하지 않을 때 테스트 필요
+   - 이클립스에서는 was 관련 라이브러리(javax.*)가 없을 경우 빌드경로가 완전하지 않아 컴파일 안되는 경우가 있음
+** 기타
+1. 쿼리가 있는 클래스 처리
+* 임시
