@@ -1,32 +1,32 @@
 package jio.codeanalysis;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.Comment;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FileASTRequestor;
-
 import jio.codeanalysis.java.processor.CommentProcessor;
 import jio.codeanalysis.java.processor.TypeProcessor;
 import jio.codeanalysis.util.HibernateUtil;
 import jio.codeanalysis.util.ParserEnvironment;
 import jio.codeanalysis.util.SourceFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.dom.*;
+
+import javax.persistence.EntityManager;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class JavaAnalysis {
     static final Logger logger = Logger.getLogger(JavaAnalysis.class.getName());
 
     public static void main(String... args) {
         JavaAnalysis ja = new JavaAnalysis();
-        ja.parse("", args);
+        URL current = JavaAnalysis.class.getResource(".");
+        URL filePath = JavaAnalysis.class.getResource("./DirectCall.java");
+        URL projectPath = JavaAnalysis.class.getResource(".");
+        String[] sourceFilePath = {filePath.getPath()};
+
+        ja.parse(projectPath.getPath(), sourceFilePath);
     }
 
     public void parse(String projectPath, String... sourceFilePaths) {
@@ -56,7 +56,8 @@ public class JavaAnalysis {
             }
         }
         em.getTransaction().commit();
-        HibernateUtil.close();
+        em.close();
+        HibernateUtil.closeEntityManagerFactory();
 
     }
 

@@ -75,6 +75,7 @@ public class TypeProcessor extends ASTVisitor {
 
             createJavaType(type.getSuperclass()).ifPresent(javaType::setSuperClass);
             em.merge(javaType);
+            em.flush();
             List<ITypeBinding> interfaces = Arrays.asList(type.getInterfaces());
             for(ITypeBinding t : interfaces) {
             	Optional<JavaType> intrface = createJavaType(t);
