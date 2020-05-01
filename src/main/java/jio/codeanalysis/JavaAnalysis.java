@@ -32,8 +32,10 @@ public class JavaAnalysis {
     public void parse(String projectPath, String... sourceFilePaths) {
         final Map<String, CompilationUnit> parsedCompilationUnits = new HashMap<>();
 
-        ASTParser parser = getParser(projectPath);
-        parser.createASTs(sourceFilePaths, ParserEnvironment.getEncoding(), new String[0]
+        ASTParser parser = getParser(sourceFilePaths);
+        parser.createASTs(sourceFilePaths
+                , ParserEnvironment.getEncodings(sourceFilePaths.length)
+                , new String[0]
                 , new FileASTRequestor() {
                     @Override
                     public void acceptAST(String sourceFilePath, CompilationUnit ast) {
@@ -58,10 +60,9 @@ public class JavaAnalysis {
         em.getTransaction().commit();
         em.close();
         HibernateUtil.closeEntityManagerFactory();
-
     }
 
-    private ASTParser getParser(String projectPath) {
+    private ASTParser getParser(String... sourceFilePaths) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
 
         Map<String, String> options = JavaCore.getOptions();
@@ -72,8 +73,8 @@ public class JavaAnalysis {
         parser.setStatementsRecovery(true);
         parser.setBindingsRecovery(true);
         parser.setEnvironment(ParserEnvironment.getClassPath()
-                , new String[] {projectPath}
-                , ParserEnvironment.getEncoding()
+                , sourceFilePaths
+                , ParserEnvironment.getEncodings(sourceFilePaths.length)
                 , true);
 
         return parser;

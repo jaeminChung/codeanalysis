@@ -16,8 +16,12 @@ public class ParserEnvironment {
         return new String[] { "." };
     }
 
-    public static String[] getEncoding() {
-        return new String[] {Encoding.UTF_8.getValue()};
+    public static String[] getEncodings(int length) {
+        String[] encodings = new String[length];
+        for (int i = 0; i < length; i++) {
+            encodings[i] = Encoding.UTF_8.getValue();
+        }
+        return encodings;
     }
 
     public static String getLineSeparator() {
