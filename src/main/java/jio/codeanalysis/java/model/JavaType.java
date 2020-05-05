@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,26 +23,32 @@ public class JavaType {
     private String qualifiedName;
 
     private String typeName;
-    private String filePath;
-    private int startPos;
-    private int length;
-    private boolean intrface;
+    private boolean isInterface;
     
-    @OneToMany(mappedBy="realizeInterface")
+    @OneToMany(mappedBy="realizeInterface"
+              ,cascade = CascadeType.ALL)
     private List<JavaTypeRelation> superInterfaces = new ArrayList<>();
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY
+              ,cascade = CascadeType.ALL)
     @JoinColumn(name="superclass_id")
     private JavaType superClass;
-    
+
+    @OneToOne(mappedBy = "type"
+             ,cascade = CascadeType.ALL)
+    private JavaTypeFileInfo fileInfo;
+
     public void addSuperInterface(JavaTypeRelation relation) {
     	this.superInterfaces.add(relation);
     }
 
-    public void setNodeInfo(TypeDeclaration node) {
+    public void setFileInfo(TypeDeclaration node, String filePath) {
         if(Objects.nonNull(node)) {
-            setStartPos(node.getStartPosition());
-            setLength(node.getLength());
+            fileInfo = new JavaTypeFileInfo();
+            fileInfo.setStartPos(node.getStartPosition());
+            fileInfo.setLength(node.getLength());
+            fileInfo.setFilePath(filePath);
+            fileInfo.setJavaType(this);
         }
     }
 }

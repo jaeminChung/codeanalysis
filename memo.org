@@ -11,28 +11,28 @@
    - 인터페이스를 구현한 구현체를 모두 호출하는 것으로
 6. 어노테이션 정보(jsp -> java)
 ** Statement
-    - Block                         -> Recurse
-    - AssertStatement               -> DefaultStatementProcessor
-    - BreakStatement                -> DefaultStatementProcessor
-    - ConstructorInvocation         -> DefaultStatementProcessor
-    - ContinueStatement             -> DefaultStatementProcessor
-    - EmptyStatement                -> DefaultStatementProcessor
-    - ExpressionStatement           -> DefaultStatementProcessor
-    - LabeledStatement              -> DefaultStatementProcessor
-    - ReturnStatement               -> DefaultStatementProcessor
-    - SuperConstructorInvocation    -> DefaultStatementProcessor
-    - ThrowStatement                -> DefaultStatementProcessor
-    - TypeDeclarationStatement      -> DefaultStatementProcessor
-    - VariableDeclarationStatement  -> DefaultStatementProcessor
-    - DoStatement                   -> FragmentStatementProcessor
-    - EnhancedForStatement          -> FragmentStatementProcessor
-    - ForStatement                  -> FragmentStatementProcessor
-    - IfStatement                   -> FragmentStatementProcessor
-    - SwitchCase                    -> FragmentStatementProcessor
-    - SwitchStatement               -> FragmentStatementProcessor
-    - SynchronizedStatement         -> FragmentStatementProcessor
-    - TryStatement                  -> FragmentStatementProcessor
-    - WhileStatement                -> FragmentStatementProcessor
+  - [ ] Block                         -> Recurse
+  - [ ] AssertStatement               -> DefaultStatementProcessor
+  - [ ] BreakStatement                -> DefaultStatementProcessor
+  - [ ] ConstructorInvocation         -> DefaultStatementProcessor
+  - [ ] ContinueStatement             -> DefaultStatementProcessor
+  - [ ] EmptyStatement                -> DefaultStatementProcessor
+  - [ ] ExpressionStatement           -> DefaultStatementProcessor
+  - [ ] LabeledStatement              -> DefaultStatementProcessor
+  - [ ] ReturnStatement               -> DefaultStatementProcessor
+  - [ ] SuperConstructorInvocation    -> DefaultStatementProcessor
+  - [ ] ThrowStatement                -> DefaultStatementProcessor
+  - [ ] TypeDeclarationStatement      -> DefaultStatementProcessor
+  - [ ] VariableDeclarationStatement  -> DefaultStatementProcessor
+  - [ ] DoStatement                   -> FragmentStatementProcessor
+  - [ ] EnhancedForStatement          -> FragmentStatementProcessor
+  - [ ] ForStatement                  -> FragmentStatementProcessor
+  - [ ] IfStatement                   -> FragmentStatementProcessor
+  - [ ] SwitchCase                    -> FragmentStatementProcessor
+  - [ ] SwitchStatement               -> FragmentStatementProcessor
+  - [ ] SynchronizedStatement         -> FragmentStatementProcessor
+  - [ ] TryStatement                  -> FragmentStatementProcessor
+  - [ ] WhileStatement                -> FragmentStatementProcessor
 ** 저장해야 할 정보
 1. [ ] 함수 호출 시 입력 문자열 -> 동적 호출
 2. [ ] 각 클래스의 물리적 위치 (프로젝트 상태 경로, 확장자 포함)

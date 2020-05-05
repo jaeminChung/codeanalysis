@@ -6,7 +6,7 @@ import java.util.List;
  * @author jmchung
  * @version 1.0
  */
-public class DirectCall implements Serializable, DirectCallInterface{
+public class DirectCall implements Serializable, CallInterface{
     String globalB = "global b";
     /*
      * @methodname call

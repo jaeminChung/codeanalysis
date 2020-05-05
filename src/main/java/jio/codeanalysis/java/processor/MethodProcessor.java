@@ -11,18 +11,12 @@ import java.util.logging.Logger;
 
 public class MethodProcessor extends ASTVisitor{
     final static Logger logger = Logger.getLogger(MethodProcessor.class.getName());
-    private EntityManager em;
+    private final EntityManager em;
     private final String filePath;
 
     public MethodProcessor(EntityManager em, String filePath) {
         this.em = em;
         this.filePath = filePath;
-    }
-
-    @Override
-    public boolean visit(VariableDeclarationStatement node) {
-        String code = node.toString();
-        return false;
     }
 
     @Override
@@ -35,7 +29,7 @@ public class MethodProcessor extends ASTVisitor{
             javaMethod.setQualifiedName(getMethodQualifiedName(method));
 
             // modifiers
-            ProcessorUtil.setModifiers(javaMethod, method);
+            javaMethod.setModifiers(method);
 
             em.persist(javaMethod);
             // input parameter

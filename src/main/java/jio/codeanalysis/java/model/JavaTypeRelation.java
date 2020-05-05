@@ -1,11 +1,6 @@
 package jio.codeanalysis.java.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +10,14 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name="java_type_relation")
-@ToString
+@ToString(exclude = "implementedClass")
 public class JavaTypeRelation {
 	@Id
 	@GeneratedValue
 	private long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY
+	          ,cascade = CascadeType.ALL)
 	@JoinColumn(name="interface_id")
 	private JavaType realizeInterface;
 	

@@ -11,9 +11,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import javax.persistence.EntityManager;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class JavaAnalysis {
@@ -45,7 +43,9 @@ public class JavaAnalysis {
 
         EntityManager em = HibernateUtil.getEntityManager();
         em.getTransaction().begin();
-        for(String filePath : parsedCompilationUnits.keySet()) {
+        List<String> sortedKey = new ArrayList<>(parsedCompilationUnits.keySet());
+        Collections.sort(sortedKey);
+        for(String filePath : sortedKey) {
 
             CompilationUnit cu = parsedCompilationUnits.get(filePath);
             cu.accept( new TypeProcessor( em , filePath) );
@@ -73,8 +73,8 @@ public class JavaAnalysis {
         parser.setStatementsRecovery(true);
         parser.setBindingsRecovery(true);
         parser.setEnvironment(ParserEnvironment.getClassPath()
-                , sourceFilePaths
-                , ParserEnvironment.getEncodings(sourceFilePaths.length)
+                , new String[0]
+                , new String[0]
                 , true);
 
         return parser;

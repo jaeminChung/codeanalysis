@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.Modifier;
 
 @Getter
 @Setter
@@ -32,4 +34,15 @@ public class JavaMethod {
     private boolean isPrivate;
 
     private boolean isProtected;
+
+    public void setModifiers(IMethodBinding method) {
+        int modifiers = method.getModifiers();
+
+        setFinal(Modifier.isFinal(modifiers));
+        setStatic(Modifier.isStatic(modifiers));
+        setAbstract(Modifier.isAbstract(modifiers));
+        setPrivate(Modifier.isPrivate(modifiers));
+        setPublic(Modifier.isPublic(modifiers));
+        setProtected(Modifier.isProtected(modifiers));
+    }
 }

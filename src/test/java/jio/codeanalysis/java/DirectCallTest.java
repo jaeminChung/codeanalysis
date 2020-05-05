@@ -13,7 +13,7 @@ public class DirectCallTest {
         URL c = DirectCallTest.class.getResource("./");
 //        URL filePath = DirectCallTest.class.getResource("./DirectCall.java");
 //        URL projectPath = DirectCallTest.class.getResource("./");
-        URL filePath1 = DirectCallTest.class.getResource("/java/DirectCallInterface.java");
+        URL filePath1 = DirectCallTest.class.getResource("/java/CallInterface.java");
         URL filePath2 = DirectCallTest.class.getResource("/java/DirectCall.java");
         URL filePath3 = DirectCallTest.class.getResource("/java/DirectCallee.java");
         URL projectPath = DirectCallTest.class.getResource("/java/");
