@@ -1,19 +1,27 @@
 package jio.codeanalysis.java.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name="java_parameter")
-@IdClass(JavaParameterId.class)
-public class JavaParameter implements Serializable {
-	private static final long serialVersionUID = 7567518805088537554L;
+@EqualsAndHashCode(of = "paramQualifiedName")
+@ToString
+public class JavaParameter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-	@Id
     @Column(name="method_qualified_name")
     private String methodQualifiedName;
 
-    @Id
     @Column(name="parameter_name")
     private String parameterName;
 
@@ -31,60 +39,4 @@ public class JavaParameter implements Serializable {
 
     @Column(name="param_seq")
     private int paramSeq;
-
-    public String getParamQualifiedName() {
-        return paramQualifiedName;
-    }
-
-    public void setParamQualifiedName(String paramQualifiedName) {
-        this.paramQualifiedName = paramQualifiedName;
-    }
-
-    public boolean isArray() {
-        return isArray;
-    }
-
-    public void setArray(boolean isArray) {
-        this.isArray = isArray;
-    }
-    
-    public String getParameterName() {
-        return parameterName;
-    }
-
-    public void setParameterName(String parameterName) {
-        this.parameterName = parameterName;
-    }
-
-    public String getMethodQualifiedName() {
-        return methodQualifiedName;
-    }
-
-    public void setMethodQualifiedName(String methodQualifiedName) {
-        this.methodQualifiedName = methodQualifiedName;
-    }
-
-    public String getTypeQualifiedName() {
-        return typeQualifiedName;
-    }
-
-    public void setTypeQualifiedName(String typeQualifiedName) {
-        this.typeQualifiedName = typeQualifiedName;
-    }
-
-    public boolean isInput() {
-        return isInput;
-    }
-
-    public void setInput(boolean input) {
-        isInput = input;
-    }
-
-    public int getParamSeq() {
-        return paramSeq;
-    }
-
-    public void setParamSeq(int paramSeq) {
-        this.paramSeq = paramSeq;
-    }
 }

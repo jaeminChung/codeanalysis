@@ -34,7 +34,7 @@ public class JavaType {
     @JoinColumn(name="superclass_id")
     private JavaType superClass;
 
-    @OneToOne(mappedBy = "type"
+    @OneToOne(mappedBy = "javaType"
              ,cascade = CascadeType.ALL)
     private JavaTypeFileInfo fileInfo;
 

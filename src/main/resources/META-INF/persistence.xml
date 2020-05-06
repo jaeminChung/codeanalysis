@@ -5,11 +5,11 @@
 <persistence-unit name="reverse">
     <class>jio.codeanalysis.java.model.JavaTypeRelation</class>
     <class>jio.codeanalysis.java.model.JavaParameter</class>
-    <class>jio.codeanalysis.java.model.JavaParameterId</class>
     <class>jio.codeanalysis.java.model.CallRelation</class>
     <class>jio.codeanalysis.java.model.JavaMethod</class>
     <class>jio.codeanalysis.java.model.JavaType</class>
     <class>jio.codeanalysis.java.model.JavaTypeFileInfo</class>
+    <class>jio.codeanalysis.java.model.JavaStatement</class>
 
     <properties>
         <!-- 필수 속성 -->

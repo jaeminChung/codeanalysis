@@ -1,8 +1,6 @@
 package jio.codeanalysis.java.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,6 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.Modifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,6 +36,10 @@ public class JavaMethod {
 
     private boolean isProtected;
 
+    @OneToMany(mappedBy = "javaMethod"
+            , cascade = CascadeType.ALL)
+    private List<JavaStatement> statements = new ArrayList<>();
+
     public void setModifiers(IMethodBinding method) {
         int modifiers = method.getModifiers();
 
@@ -44,5 +49,9 @@ public class JavaMethod {
         setPrivate(Modifier.isPrivate(modifiers));
         setPublic(Modifier.isPublic(modifiers));
         setProtected(Modifier.isProtected(modifiers));
+    }
+
+    public void addStatement(JavaStatement statement) {
+        statements.add(statement);
     }
 }

@@ -31,15 +31,16 @@ public class MethodProcessor extends ASTVisitor{
             // modifiers
             javaMethod.setModifiers(method);
 
-            em.persist(javaMethod);
             // input parameter
-            saveInputParameter(node, javaMethod);
+            //saveInputParameter(node, javaMethod);
 
             //output parameter
-            saveReturnParameter(method, javaMethod);
+            //saveReturnParameter(method, javaMethod);
+
+            node.getBody().accept(new StatementProcessor(javaMethod));
+            em.persist(javaMethod);
         }
 
-        node.getBody().accept(new StatementProcessor());
         return super.visit(node);
     }
 
@@ -62,6 +63,7 @@ public class MethodProcessor extends ASTVisitor{
     }
 
     private String getParameters(IMethodBinding method) {
+
         StringJoiner joiner = new StringJoiner(",");
         for (ITypeBinding tb : method.getParameterTypes()) {
             joiner.add(tb.getName());

@@ -1,11 +1,37 @@
 package jio.codeanalysis.java.processor;
 
+import jio.codeanalysis.java.model.JavaMethod;
+import jio.codeanalysis.java.model.JavaStatement;
 import org.eclipse.jdt.core.dom.*;
 import org.jboss.logging.Logger;
 
 
 public class StatementProcessor extends ASTVisitor {
     final static Logger logger = Logger.getLogger(StatementProcessor.class.getName());
+    final private JavaMethod method;
+
+    public StatementProcessor(JavaMethod method) {
+        this.method = method;
+    }
+
+    @Override
+    public boolean visit(VariableDeclarationStatement node) {
+        addStatement(node);
+
+        return super.visit(node);
+    }
+
+    private void addStatement(ASTNode node) {
+        JavaStatement statement = new JavaStatement();
+        statement.setJavaMethod(method);
+        method.addStatement(statement);
+
+        statement.setStartPos(node.getStartPosition());
+        statement.setLength(node.getLength());
+        statement.setStatement(node.toString());
+
+        //node.visit(new MethodCallProcessor(javaStatement));
+    }
 
     @Override
     public boolean visit(ForStatement node) {
