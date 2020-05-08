@@ -23,14 +23,13 @@ public class StatementProcessor extends ASTVisitor {
 
     private void addStatement(ASTNode node) {
         JavaStatement statement = new JavaStatement();
-        statement.setJavaMethod(method);
         method.addStatement(statement);
 
         statement.setStartPos(node.getStartPosition());
         statement.setLength(node.getLength());
         statement.setStatement(node.toString());
 
-        //node.visit(new MethodCallProcessor(javaStatement));
+        node.accept(new MethodInvocationProcessor(statement));
     }
 
     @Override

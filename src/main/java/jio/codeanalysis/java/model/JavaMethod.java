@@ -36,9 +36,11 @@ public class JavaMethod {
 
     private boolean isProtected;
 
-    @OneToMany(mappedBy = "javaMethod"
-            , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "javaMethod", cascade = CascadeType.ALL)
     private List<JavaStatement> statements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "javaMethod", cascade = CascadeType.ALL)
+    private List<JavaParameter> parameters = new ArrayList<>();
 
     public void setModifiers(IMethodBinding method) {
         int modifiers = method.getModifiers();
@@ -52,6 +54,12 @@ public class JavaMethod {
     }
 
     public void addStatement(JavaStatement statement) {
+        statement.setJavaMethod(this);
         statements.add(statement);
+    }
+
+    public void addParameter(JavaParameter parameter) {
+        parameter.setJavaMethod(this);
+        parameters.add(parameter);
     }
 }

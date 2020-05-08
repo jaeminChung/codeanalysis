@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     compile 'org.eclipse.jdt:org.eclipse.jdt.core:3.13.100'
-    compile 'org.hibernate:hibernate-entitymanager:5.3.10.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.4.15.Final'
     compile 'postgresql:postgresql:9.1-901-1.jdbc4'
     compile 'javax.xml.bind:jaxb-api:2.3.0'
     compile 'com.h2database:h2:1.4.200'

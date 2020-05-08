@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,14 +14,13 @@ import java.util.List;
 @Entity
 @Table(name = "java_statement")
 @EqualsAndHashCode(of = "id")
-@ToString
+@ToString(exclude = "javaMethod")
 public class JavaStatement {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="qualifiedName")
     private JavaMethod javaMethod;
 
     @ManyToOne
@@ -29,11 +29,25 @@ public class JavaStatement {
 
     @OneToMany(mappedBy = "parentStatement"
               , cascade = CascadeType.ALL)
-    private List<JavaStatement> childStatements;
+    private List<JavaStatement> childStatements = new ArrayList<>();
 
+    @OneToMany(mappedBy = "javaStatement"
+              , cascade = CascadeType.ALL)
+    private List<JavaMethodInvocation> methodInvocations = new ArrayList<>();
     private String filePath;
     private int startPos;
     private int length;
     private int loc;
     private String statement;
+
+    public void addMethodInvocation(JavaMethodInvocation invocation) {
+        invocation.setJavaStatement(this);
+        invocation.setSeq(methodInvocations.size());
+        methodInvocations.add(invocation);
+    }
+
+    public void addChildStatement(JavaStatement child) {
+        child.setParentStatement(this);
+        childStatements.add(child);
+    }
 }
