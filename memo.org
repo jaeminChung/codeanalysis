@@ -11,7 +11,7 @@
    - 인터페이스를 구현한 구현체를 모두 호출하는 것으로
 6. 어노테이션 정보(jsp -> java)
 ** Statement
-  - [ ] Block                         -> Recurse
+  - [X] Block                         -> Recurse
   - [X] AssertStatement               -> DefaultStatementProcessor
   - [X] BreakStatement                -> DefaultStatementProcessor
   - [X] ConstructorInvocation         -> DefaultStatementProcessor
@@ -30,12 +30,12 @@
   - [ ] IfStatement                   -> FragmentStatementProcessor
   - [ ] SwitchCase                    -> FragmentStatementProcessor
   - [ ] SwitchStatement               -> FragmentStatementProcessor
-  - [ ] SynchronizedStatement         -> FragmentStatementProcessor
+  - [X] SynchronizedStatement         -> FragmentStatementProcessor
   - [ ] TryStatement                  -> FragmentStatementProcessor
   - [X] WhileStatement                -> FragmentStatementProcessor
 ** 저장해야 할 정보
 1. [X] 함수 호출 시 입력 문자열 -> 동적 호출
-2. [ ] 각 클래스의 물리적 위치 (프로젝트 상태 경로, 확장자 포함)
+2. [ ] 각 클래스의 물리적 위치 (프로젝트 상대 경로, 확장자 포함)
 3. [ ] 각 요소의 파일에서의 위치(라인)
 4. [ ] 각 요소의 주석
 5. [ ] 프로젝트명

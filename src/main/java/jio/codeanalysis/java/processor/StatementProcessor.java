@@ -1,14 +1,13 @@
 package jio.codeanalysis.java.processor;
 
-import jdk.internal.joptsimple.internal.Strings;
-import jdk.nashorn.internal.ir.BlockStatement;
 import jio.codeanalysis.java.model.JavaMethod;
 import jio.codeanalysis.java.model.JavaStatement;
 import jio.codeanalysis.java.model.StatementType;
 import org.eclipse.jdt.core.dom.*;
 import org.jboss.logging.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -25,14 +24,6 @@ public class StatementProcessor extends ASTVisitor {
     @Override
     public boolean visit(VariableDeclarationStatement node) {
         addStatement(node, StatementType.VARIABLE_DECLARATION_STATEMENT);
-
-        return super.visit(node);
-    }
-
-    //TODO : body를 어떻게 가져오지?
-    @Override
-    public boolean visit(Block node) {
-        logger.info(String.format("Block : %s", node.toString()));
 
         return super.visit(node);
     }
@@ -140,15 +131,16 @@ public class StatementProcessor extends ASTVisitor {
 
         return false;
     }
+
     @Override
     public boolean visit(EnhancedForStatement node) {
         String parameter = "";
-        if(Objects.nonNull(node.getParameter())) {
+        if (Objects.nonNull(node.getParameter())) {
             parameter = node.getParameter().toString();
         }
 
         String expression = "";
-        if(Objects.nonNull(node.getExpression())) {
+        if (Objects.nonNull(node.getExpression())) {
             expression = node.getExpression().toString();
         }
 
@@ -159,29 +151,19 @@ public class StatementProcessor extends ASTVisitor {
 
     @Override
     public boolean visit(DoStatement node) {
-        Expression expression = node.getExpression();
+        addExpressionFragmentStatement(node, node.getBody(), node.getExpression(), StatementType.DO_STATEMENT);
+        return false;
+    }
 
-        String condition = "";
-        if (Objects.nonNull(expression)) {
-            condition = expression.toString();
-        }
-
-        addFragmentStatement(node, StatementType.DO_STATEMENT, condition, node.getBody());
-
+    @Override
+    public boolean visit(SynchronizedStatement node) {
+        addExpressionFragmentStatement(node, node.getBody(), node.getExpression(), StatementType.SYNCHRONIZED_STATEMENT);
         return false;
     }
 
     @Override
     public boolean visit(WhileStatement node) {
-        Expression expression = node.getExpression();
-
-        String condition = "";
-        if (Objects.nonNull(expression)) {
-            condition = expression.toString();
-        }
-
-        addFragmentStatement(node, StatementType.WHILE_STATEMENT, condition, node.getBody());
-
+        addExpressionFragmentStatement(node, node.getBody(), node.getExpression(), StatementType.WHILE_STATEMENT);
         return false;
     }
 
@@ -204,27 +186,51 @@ public class StatementProcessor extends ASTVisitor {
     }
 
     @Override
-    public  boolean visit(SwitchStatement node) {
+    public boolean visit(SwitchStatement node) {
         Expression expression = node.getExpression();
 
-        if( expression != null ) {
-            logger.info( String.format("  Switch statement expression : %s", expression.toString()) );
+        if (expression != null) {
+            logger.info(String.format("  Switch statement expression : %s", expression.toString()));
         }
 
-        for( int i=0; (node.statements() != null) && (i < node.statements().size()); i++) {
+        for (int i = 0; (node.statements() != null) && (i < node.statements().size()); i++) {
             Statement stmtNode = (Statement) node.statements().get(i);
-            if( stmtNode instanceof  SwitchCase ) {
+            if (stmtNode instanceof SwitchCase) {
                 SwitchCase caseNode = (SwitchCase) stmtNode;
 
-                if( caseNode.getExpression() != null ) {
-                    logger.info( String.format("  Switch statement case expression : %s", caseNode.getExpression().toString()) );
-                    caseNode.getExpression().accept( this );
+                if (caseNode.getExpression() != null) {
+                    logger.info(String.format("  Switch statement case expression : %s", caseNode.getExpression().toString()));
+                    caseNode.getExpression().accept(this);
                 }
             } else {
-                stmtNode.accept( this );
+                stmtNode.accept(this);
             }
         }
 
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(Block node) {
+        ASTNode parent = node.getParent();
+        if (parent instanceof Block) {
+            JavaStatement statement = new JavaStatement();
+
+            statement.setStartPos(node.getStartPosition());
+            statement.setLength(node.getLength());
+            statement.setStatementType(StatementType.BLOCK_STATEMENT);
+            statement.setStatement("");
+            method.addStatement(statement);
+            if (Objects.nonNull(parentStatement))
+                parentStatement.addChildStatement(statement);
+
+            @SuppressWarnings("unchecked")
+            List<Statement> statements = (List<Statement>) node.statements();
+            if (Objects.nonNull(statements)) {
+                statements.forEach(s -> s.accept(new StatementProcessor(method, statement)));
+            }
+            return false;
+        }
         return super.visit(node);
     }
 
@@ -260,5 +266,14 @@ public class StatementProcessor extends ASTVisitor {
         }
 
         return statement;
+    }
+
+    private JavaStatement addExpressionFragmentStatement(ASTNode node, Statement body, Expression expression, StatementType statementType) {
+        String condition = "";
+        if (Objects.nonNull(expression)) {
+            condition = expression.toString();
+        }
+
+        return addFragmentStatement(node, StatementType.DO_STATEMENT, condition, body);
     }
 }

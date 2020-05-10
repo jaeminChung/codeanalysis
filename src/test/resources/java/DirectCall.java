@@ -21,6 +21,9 @@ public class DirectCall implements Serializable, CallInterface{
         s = s + methodName;
         int i = callee.calleeMethod(s, globalB, new DirectCallee());
         i = Integer.valueOf("3");
+        {
+            String s1 = "진짜 블럭";
+        }
     }
 
     private String call(List<String> list) {
@@ -30,6 +33,9 @@ public class DirectCall implements Serializable, CallInterface{
         for (int a = 0, b[] = {1}, c[][] = {{1}, {2}}; a < 10; a++) {
             System.out.println(String.valueOf(a));
         }
+        for (String s : list)
+            System.out.println("블럭 없는 For문");
+
 
         return "OK";
     }
