@@ -12,29 +12,29 @@
 6. 어노테이션 정보(jsp -> java)
 ** Statement
   - [ ] Block                         -> Recurse
-  - [ ] AssertStatement               -> DefaultStatementProcessor
-  - [ ] BreakStatement                -> DefaultStatementProcessor
-  - [ ] ConstructorInvocation         -> DefaultStatementProcessor
-  - [ ] ContinueStatement             -> DefaultStatementProcessor
-  - [ ] EmptyStatement                -> DefaultStatementProcessor
-  - [ ] ExpressionStatement           -> DefaultStatementProcessor
-  - [ ] LabeledStatement              -> DefaultStatementProcessor
-  - [ ] ReturnStatement               -> DefaultStatementProcessor
-  - [ ] SuperConstructorInvocation    -> DefaultStatementProcessor
-  - [ ] ThrowStatement                -> DefaultStatementProcessor
-  - [ ] TypeDeclarationStatement      -> DefaultStatementProcessor
-  - [ ] VariableDeclarationStatement  -> DefaultStatementProcessor
-  - [ ] DoStatement                   -> FragmentStatementProcessor
-  - [ ] EnhancedForStatement          -> FragmentStatementProcessor
-  - [ ] ForStatement                  -> FragmentStatementProcessor
+  - [X] AssertStatement               -> DefaultStatementProcessor
+  - [X] BreakStatement                -> DefaultStatementProcessor
+  - [X] ConstructorInvocation         -> DefaultStatementProcessor
+  - [X] ContinueStatement             -> DefaultStatementProcessor
+  - [X] EmptyStatement                -> DefaultStatementProcessor
+  - [X] ExpressionStatement           -> DefaultStatementProcessor
+  - [X] LabeledStatement              -> DefaultStatementProcessor
+  - [X] ReturnStatement               -> DefaultStatementProcessor
+  - [X] SuperConstructorInvocation    -> DefaultStatementProcessor
+  - [X] ThrowStatement                -> DefaultStatementProcessor
+  - [X] TypeDeclarationStatement      -> DefaultStatementProcessor
+  - [X] VariableDeclarationStatement  -> DefaultStatementProcessor
+  - [X] DoStatement                   -> FragmentStatementProcessor
+  - [X] EnhancedForStatement          -> FragmentStatementProcessor
+  - [X] ForStatement                  -> FragmentStatementProcessor
   - [ ] IfStatement                   -> FragmentStatementProcessor
   - [ ] SwitchCase                    -> FragmentStatementProcessor
   - [ ] SwitchStatement               -> FragmentStatementProcessor
   - [ ] SynchronizedStatement         -> FragmentStatementProcessor
   - [ ] TryStatement                  -> FragmentStatementProcessor
-  - [ ] WhileStatement                -> FragmentStatementProcessor
+  - [X] WhileStatement                -> FragmentStatementProcessor
 ** 저장해야 할 정보
-1. [ ] 함수 호출 시 입력 문자열 -> 동적 호출
+1. [X] 함수 호출 시 입력 문자열 -> 동적 호출
 2. [ ] 각 클래스의 물리적 위치 (프로젝트 상태 경로, 확장자 포함)
 3. [ ] 각 요소의 파일에서의 위치(라인)
 4. [ ] 각 요소의 주석

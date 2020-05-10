@@ -38,6 +38,8 @@ public class JavaStatement {
     private int startPos;
     private int length;
     private int loc;
+    @Enumerated(EnumType.STRING)
+    private StatementType statementType;
     private String statement;
 
     public void addMethodInvocation(JavaMethodInvocation invocation) {

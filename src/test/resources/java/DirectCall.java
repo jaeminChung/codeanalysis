@@ -27,7 +27,16 @@ public class DirectCall implements Serializable, CallInterface{
         for(String s : list) {
             System.out.println(s);
         }
+        for (int a = 0, b[] = {1}, c[][] = {{1}, {2}}; a < 10; a++) {
+            System.out.println(String.valueOf(a));
+        }
 
         return "OK";
+    }
+
+    private void NestedCall() {
+        DirectCallee callee = new DirectCallee();
+        int i = callee.calleeMethod(callee.getString(4L), callee.getString(500L), new DirectCallee("s/ddd/llll"));
+        String s = callee.getString(4L).toString();
     }
 }

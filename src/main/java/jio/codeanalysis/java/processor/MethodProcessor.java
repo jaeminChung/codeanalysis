@@ -36,7 +36,7 @@ public class MethodProcessor extends ASTVisitor{
             //output parameter
             saveReturnParameter(method, javaMethod);
 
-            node.getBody().accept(new StatementProcessor(javaMethod));
+            node.getBody().accept(new StatementProcessor(javaMethod,  null));
             em.persist(javaMethod);
         }
 
