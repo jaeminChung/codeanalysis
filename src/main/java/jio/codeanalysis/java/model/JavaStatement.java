@@ -61,4 +61,9 @@ public class JavaStatement {
         child.setParentStatement(this);
         childStatements.add(child);
     }
+
+    public void addSiblingStatement(JavaStatement sibiling) {
+        sibiling.setSiblingStatement(this);
+        siblingStatements.add(sibiling);
+    }
 }

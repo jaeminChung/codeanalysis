@@ -169,49 +169,34 @@ public class StatementProcessor extends ASTVisitor {
 
     @Override
     public boolean visit(IfStatement node) {
-        if (node.getExpression() != null) {
-            logger.info(String.format("  If statement expression : %s", node.getExpression().toString()));
-            node.getExpression().accept(this);
-        }
-
-        if (node.getThenStatement() != null) { //if body
-            logger.info(String.format("  Then statement expression : %s", node.getThenStatement().toString()));
-            node.getThenStatement().accept(this);
-        }
-
+        JavaStatement ifStatement = addExpressionFragmentStatement(node, node.getThenStatement(), node.getExpression(), StatementType.IF_STATEMENT);
         if (node.getElseStatement() != null) { //else ~
-            logger.info(String.format("  Else statement expression : %s", node.getElseStatement().toString()));
-            node.getElseStatement().accept(this);
+            JavaStatement elseStatement = addFragmentStatement(node.getElseStatement(), StatementType.ELSE_STATEMENT, "", node.getElseStatement());
+            ifStatement.addSiblingStatement(elseStatement);
         }
 
-        return super.visit(node);
+        return false;
     }
 
     @Override
     public boolean visit(SwitchStatement node) {
-        Expression expression = node.getExpression();
-
-        if (Objects.nonNull(expression)) {
-            logger.info(String.format("  Switch statement expression : %s", expression.toString()));
-        }
+        JavaStatement switchStatement = addExpressionFragmentStatement(node, null, node.getExpression(), StatementType.SWITCH_STATEMENT);
 
         if(Objects.nonNull(node.statements())) {
+            JavaStatement switchCaseStatement = null;
             for(Object s : node.statements()) {
                 Statement stmtNode = (Statement) s;
                 if (stmtNode instanceof SwitchCase) {
                     SwitchCase caseNode = (SwitchCase) stmtNode;
-
-                    if (caseNode.getExpression() != null) {
-                        logger.info(String.format("  Switch statement case expression : %s", caseNode.getExpression().toString()));
-                        caseNode.getExpression().accept(this);
-                    }
+                    switchCaseStatement = addExpressionFragmentStatement(caseNode, caseNode, caseNode.getExpression(), StatementType.SWITCH_CASE);
+                    switchStatement.addSiblingStatement(switchCaseStatement);
                 } else {
-                    stmtNode.accept(this);
+                    stmtNode.accept(new StatementProcessor(method, switchCaseStatement));
                 }
             }
         }
 
-        return super.visit(node);
+        return false;
     }
 
     @Override
@@ -278,6 +263,6 @@ public class StatementProcessor extends ASTVisitor {
             condition = expression.toString();
         }
 
-        return addFragmentStatement(node, StatementType.DO_STATEMENT, condition, body);
+        return addFragmentStatement(node, statementType, condition, body);
     }
 }

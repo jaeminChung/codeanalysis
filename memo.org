@@ -27,9 +27,9 @@
   - [X] DoStatement                   -> FragmentStatementProcessor
   - [X] EnhancedForStatement          -> FragmentStatementProcessor
   - [X] ForStatement                  -> FragmentStatementProcessor
-  - [ ] IfStatement                   -> FragmentStatementProcessor
-  - [ ] SwitchCase                    -> FragmentStatementProcessor
-  - [ ] SwitchStatement               -> FragmentStatementProcessor
+  - [X] IfStatement                   -> FragmentStatementProcessor
+  - [X] SwitchCase                    -> FragmentStatementProcessor
+  - [X] SwitchStatement               -> FragmentStatementProcessor
   - [X] SynchronizedStatement         -> FragmentStatementProcessor
   - [ ] TryStatement                  -> FragmentStatementProcessor
   - [X] WhileStatement                -> FragmentStatementProcessor

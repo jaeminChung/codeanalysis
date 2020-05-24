@@ -57,4 +57,18 @@ public class DirectCall implements Serializable, CallInterface{
             String sElse = check;
         }
     }
+
+    private void checkCaseStatement(String condition) {
+        switch (condition) {
+            case "aa" :
+            case "bb" :
+                String b = "bbb";
+                System.err.println(b);
+                break;
+            case "cc":
+            default:
+                throws new Exception("exception");
+                break;
+        }
+    }
 }
