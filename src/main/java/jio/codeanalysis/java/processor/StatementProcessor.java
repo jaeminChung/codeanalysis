@@ -174,11 +174,13 @@ public class StatementProcessor extends ASTVisitor {
             node.getExpression().accept(this);
         }
 
-        if (node.getThenStatement() != null) {
+        if (node.getThenStatement() != null) { //if body
+            logger.info(String.format("  Then statement expression : %s", node.getThenStatement().toString()));
             node.getThenStatement().accept(this);
         }
 
-        if (node.getElseStatement() != null) {
+        if (node.getElseStatement() != null) { //else ~
+            logger.info(String.format("  Else statement expression : %s", node.getElseStatement().toString()));
             node.getElseStatement().accept(this);
         }
 
@@ -189,21 +191,23 @@ public class StatementProcessor extends ASTVisitor {
     public boolean visit(SwitchStatement node) {
         Expression expression = node.getExpression();
 
-        if (expression != null) {
+        if (Objects.nonNull(expression)) {
             logger.info(String.format("  Switch statement expression : %s", expression.toString()));
         }
 
-        for (int i = 0; (node.statements() != null) && (i < node.statements().size()); i++) {
-            Statement stmtNode = (Statement) node.statements().get(i);
-            if (stmtNode instanceof SwitchCase) {
-                SwitchCase caseNode = (SwitchCase) stmtNode;
+        if(Objects.nonNull(node.statements())) {
+            for(Object s : node.statements()) {
+                Statement stmtNode = (Statement) s;
+                if (stmtNode instanceof SwitchCase) {
+                    SwitchCase caseNode = (SwitchCase) stmtNode;
 
-                if (caseNode.getExpression() != null) {
-                    logger.info(String.format("  Switch statement case expression : %s", caseNode.getExpression().toString()));
-                    caseNode.getExpression().accept(this);
+                    if (caseNode.getExpression() != null) {
+                        logger.info(String.format("  Switch statement case expression : %s", caseNode.getExpression().toString()));
+                        caseNode.getExpression().accept(this);
+                    }
+                } else {
+                    stmtNode.accept(this);
                 }
-            } else {
-                stmtNode.accept(this);
             }
         }
 

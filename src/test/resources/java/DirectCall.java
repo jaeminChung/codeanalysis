@@ -1,3 +1,5 @@
+import jdk.jfr.internal.Logger;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,5 +46,15 @@ public class DirectCall implements Serializable, CallInterface{
         DirectCallee callee = new DirectCallee();
         int i = callee.calleeMethod(callee.getString(4L), callee.getString(500L), new DirectCallee("s/ddd/llll"));
         String s = callee.getString(4L).toString();
+    }
+
+    private void checkIfStatement(String check) {
+        if("if".equals(check)) {
+            String sIf = check;
+        } else if("else if".equals(check)) {
+            String sElseIf = check;
+        } else {
+            String sElse = check;
+        }
     }
 }

@@ -20,6 +20,18 @@ public class JavaStatement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    private StatementType statementType;
+
+    private int startPos;
+    private int length;
+    private int loc;
+    private String statement;
+
+    @OneToMany(mappedBy = "javaStatement"
+            , cascade = CascadeType.ALL)
+    private List<JavaMethodInvocation> methodInvocations = new ArrayList<>();
+
     @ManyToOne
     private JavaMethod javaMethod;
 
@@ -31,16 +43,13 @@ public class JavaStatement {
               , cascade = CascadeType.ALL)
     private List<JavaStatement> childStatements = new ArrayList<>();
 
-    @OneToMany(mappedBy = "javaStatement"
-              , cascade = CascadeType.ALL)
-    private List<JavaMethodInvocation> methodInvocations = new ArrayList<>();
-    private String filePath;
-    private int startPos;
-    private int length;
-    private int loc;
-    @Enumerated(EnumType.STRING)
-    private StatementType statementType;
-    private String statement;
+    @ManyToOne
+    @JoinColumn(name = "sibling_id")
+    private JavaStatement siblingStatement;
+
+    @OneToMany(mappedBy = "siblingStatement"
+            , cascade = CascadeType.ALL)
+    private List<JavaStatement> siblingStatements = new ArrayList<>();
 
     public void addMethodInvocation(JavaMethodInvocation invocation) {
         invocation.setJavaStatement(this);
