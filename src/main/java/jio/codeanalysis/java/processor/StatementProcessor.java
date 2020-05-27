@@ -200,6 +200,23 @@ public class StatementProcessor extends ASTVisitor {
     }
 
     @Override
+    public boolean visit(TryStatement node) {
+        String resource = (String) node.resources().stream().map(Object::toString).collect(Collectors.joining("\n"));
+        JavaStatement tryStatement = addFragmentStatement(node, StatementType.TRY_STATEMENT, resource, node.getBody());
+        for(Object o : node.catchClauses()) {
+            CatchClause cat = (CatchClause) o;
+            JavaStatement catchStatement = addFragmentStatement(cat, StatementType.CATCH_STATEMENT, cat.getException().toString(), cat.getBody());
+            tryStatement.addSiblingStatement(catchStatement);
+        }
+        Block finallyBlock = node.getFinally();
+        if(Objects.nonNull(finallyBlock)) {
+            JavaStatement finallyStatement = addFragmentStatement(finallyBlock, StatementType.FINALLY_STATEMENT, "", finallyBlock);
+            tryStatement.addSiblingStatement(finallyStatement);
+        }
+        return false;
+    }
+
+    @Override
     public boolean visit(Block node) {
         ASTNode parent = node.getParent();
         if (parent instanceof Block) {

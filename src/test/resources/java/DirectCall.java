@@ -58,7 +58,7 @@ public class DirectCall implements Serializable, CallInterface{
         }
     }
 
-    private void checkCaseStatement(String condition) {
+    private void checkCaseStatement(String condition) throws Exception {
         switch (condition) {
             case "aa" :
             case "bb" :
@@ -69,6 +69,22 @@ public class DirectCall implements Serializable, CallInterface{
             default:
                 throws new Exception("exception");
                 break;
+        }
+    }
+
+    private void catchException() {
+        try(File f = new File("")) {
+            checkCaseStatement("");
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("OK");
+        }
+
+        try {
+            String noresource;
+        } catch (Exception e) {
+            String withoutFinally;
         }
     }
 }
