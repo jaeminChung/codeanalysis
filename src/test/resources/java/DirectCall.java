@@ -2,6 +2,7 @@ import jdk.jfr.internal.Logger;
 
 import java.io.Serializable;
 import java.util.List;
+import java.io.File;
 
 /**
  * @classname Direct call
@@ -29,10 +30,13 @@ public class DirectCall implements Serializable, CallInterface{
     }
 
     private String call(List<String> list) {
-        for(String s : list) {
+        for( ; ; ) {
+            //Nothing
+        }
+        for(String s : list.subList(0, 1)) {
             System.out.println(s);
         }
-        for (int a = 0, b[] = {1}, c[][] = {{1}, {2}}; a < 10; a++) {
+        for (int a = 0, b[] = {1}, c[][] = {{1}, {2}}; a < list.size(); a++) {
             System.out.println(String.valueOf(a));
         }
         for (String s : list)

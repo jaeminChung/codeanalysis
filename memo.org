@@ -1,11 +1,11 @@
 * 리버스
 ** 호출관계
-1. 함수 호출 안의 호출(입력인자로서)
-2. 조건문, 반복문 안에서 함수 호출
-3. 연결된 함수 호출
+1. [X] 함수 호출 안의 호출(입력인자로서)
+2. [X] 조건문, 반복문 안에서 함수 호출
+3. [X] 연결된 함수 호출
    - clazz.selectLists().size()
    - clazz.selectLists().get(2)
-4. 다이나믹 호출
+4. [X] 다이나믹 호출
    - 함수 호출의 입력인자값 추적
 5. 인터페이스 호출
    - 인터페이스를 구현한 구현체를 모두 호출하는 것으로
@@ -31,7 +31,7 @@
   - [X] SwitchCase                    -> FragmentStatementProcessor
   - [X] SwitchStatement               -> FragmentStatementProcessor
   - [X] SynchronizedStatement         -> FragmentStatementProcessor
-  - [ ] TryStatement                  -> FragmentStatementProcessor
+  - [X] TryStatement                  -> FragmentStatementProcessor
   - [X] WhileStatement                -> FragmentStatementProcessor
 ** 저장해야 할 정보
 1. [X] 함수 호출 시 입력 문자열 -> 동적 호출

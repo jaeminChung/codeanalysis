@@ -107,33 +107,40 @@ public class StatementProcessor extends ASTVisitor {
 
     @Override
     public boolean visit(ForStatement node) {
+        JavaStatement statement = addFragmentStatement(node, StatementType.FOR_STATEMENT, "", node.getBody());
+
         String initializers = "";
         if (Objects.nonNull(node.initializers())) {
             @SuppressWarnings("unchecked")
-            List<Object> nodes = node.initializers();
+            List<Expression> nodes = node.initializers();
             initializers = nodes.stream().map(Object::toString).collect(Collectors.joining(","));
+            nodes.forEach(each -> each.accept(new MethodInvocationProcessor(statement)));
         }
 
         String expression = "";
         if (Objects.nonNull(node.getExpression())) {
             expression = node.getExpression().toString();
+            node.getExpression().accept(new MethodInvocationProcessor(statement));
         }
 
         String updaters = "";
         if (Objects.nonNull(node.updaters())) {
             @SuppressWarnings("unchecked")
-            List<Object> nodes = node.updaters();
+            List<Expression> nodes = node.updaters();
             updaters = nodes.stream().map(Object::toString).collect(Collectors.joining(","));
+            nodes.forEach(each -> each.accept(new MethodInvocationProcessor(statement)));
         }
 
         String condition = String.format("for(%s; %s; %s)", initializers, expression, updaters);
-        addFragmentStatement(node, StatementType.FOR_STATEMENT, condition, node.getBody());
+        statement.setStatement(condition);
 
         return false;
     }
 
     @Override
     public boolean visit(EnhancedForStatement node) {
+        JavaStatement statement = addFragmentStatement(node, StatementType.ENHANCED_FOR_STATEMENT, "", node.getBody());
+
         String parameter = "";
         if (Objects.nonNull(node.getParameter())) {
             parameter = node.getParameter().toString();
@@ -142,10 +149,11 @@ public class StatementProcessor extends ASTVisitor {
         String expression = "";
         if (Objects.nonNull(node.getExpression())) {
             expression = node.getExpression().toString();
+            node.getExpression().accept(new MethodInvocationProcessor(statement));
         }
 
         String condition = String.format("for(%s : %s)", parameter, expression);
-        addFragmentStatement(node, StatementType.ENHANCED_FOR_STATEMENT, condition, node.getBody());
+        statement.setStatement(condition);
         return false;
     }
 
@@ -200,9 +208,13 @@ public class StatementProcessor extends ASTVisitor {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean visit(TryStatement node) {
-        String resource = (String) node.resources().stream().map(Object::toString).collect(Collectors.joining("\n"));
+        List<Expression> resources = node.resources();
+        String resource = resources.stream().map(Object::toString).collect(Collectors.joining("\n"));
         JavaStatement tryStatement = addFragmentStatement(node, StatementType.TRY_STATEMENT, resource, node.getBody());
+        resources.forEach(each -> each.accept(new MethodInvocationProcessor(tryStatement)));
+
         for(Object o : node.catchClauses()) {
             CatchClause cat = (CatchClause) o;
             JavaStatement catchStatement = addFragmentStatement(cat, StatementType.CATCH_STATEMENT, cat.getException().toString(), cat.getBody());
@@ -275,11 +287,12 @@ public class StatementProcessor extends ASTVisitor {
     }
 
     private JavaStatement addExpressionFragmentStatement(ASTNode node, Statement body, Expression expression, StatementType statementType) {
-        String condition = "";
+        JavaStatement statement = addFragmentStatement(node, statementType, "", body);
         if (Objects.nonNull(expression)) {
-            condition = expression.toString();
+            statement.setStatement(expression.toString());
+            expression.accept(new MethodInvocationProcessor(statement));
         }
 
-        return addFragmentStatement(node, statementType, condition, body);
+        return statement;
     }
 }
